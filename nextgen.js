@@ -62,7 +62,7 @@ function genManifest() {
   const icon = sharp("src/images/icon.png")
   icons.forEach(({ src, sizes }) => {
     const [w, h] = sizes.split("x").map(s => parseInt(s))
-    icon.resize(w, h).toFile(`public${src}`)
+    icon.resize(w, h).toFile(path.join("public", src))
   })
 
   const manifest = {
@@ -72,8 +72,13 @@ function genManifest() {
     background_color: dotEnv.THEME_COLOR, // splash screen
   }
 
-  fs.writeFileSync(`public${dotEnv.MANIFEST}`, JSON.stringify(manifest))
+  const manifestName = path.join("public", dotEnv.MANIFEST)
+  const manifestDir = path.join(manifestName, "..")
+  if (!fs.existsSync(manifestDir)) {
+    fs.mkdirSync(manifestDir)
+  }
+  fs.writeFileSync(manifestName, JSON.stringify(manifest))
 }
 
-genSitemap()
 genManifest()
+genSitemap()
