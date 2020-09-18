@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { AppProps } from 'next/app'
 import { init as sentryInit } from "@sentry/browser"
 import { initialize as analyticsInit, pageview } from 'react-ga'
-import { ChakraProvider } from "@chakra-ui/core"
+import { ChakraProvider, Container } from "@chakra-ui/core"
 
 sentryInit({
   enabled: !!process.env.NEXT_PUBLIC_SENTRY,
@@ -24,7 +24,9 @@ export default function MyApp({ Component, pageProps, router }: AppProps): JSX.E
 
   return (
     <ChakraProvider resetCSS>
-      <Component {...pageProps} />
+      <Container>
+        <Component {...pageProps} />
+      </Container>
     </ChakraProvider>
   )
 }

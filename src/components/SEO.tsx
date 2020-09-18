@@ -1,5 +1,5 @@
-import Head from "next/head";
 import React, { ReactNode } from "react";
+import Head from "next/head";
 
 export default function SEO({
   title,
@@ -23,14 +23,22 @@ export default function SEO({
 
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      {image && (
+        <>
+          <meta property="og:image" content={image} />
+          <meta property="og:image:alt" content={description} />
+        </>
+      )}
 
       <meta name="twitter:card" content={twitterCard} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
-      <meta name="twitter:image:alt" content={description} />
-
+      {image && (
+        <>
+          <meta name="twitter:image" content={image} />
+          <meta name="twitter:image:alt" content={description} />
+        </>
+      )}
       {twitterSite && <meta name="twitter:site" content={twitterSite} />}
 
       {children}
