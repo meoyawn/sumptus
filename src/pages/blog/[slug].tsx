@@ -9,6 +9,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import hydrate from 'next-mdx-remote/hydrate'
 
 import MDXComponents from "../../components/MDXComponents"
+import { Post } from "./index";
 
 const components = MDXComponents
 
@@ -26,7 +27,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 
 type Props = {
   mdx: string
-  frontMatter: Record<string, unknown>
+  post: Post
 }
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
@@ -35,16 +36,21 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
   const { data, content } = await readMD(`${params.slug}.mdx`)
   const mdx = await renderToString(content, { components })
 
+
   return {
     props: {
       mdx,
-      frontMatter: data,
+      post: {
+        slug: params.slug,
+        title: data.title as string,
+        date: (data.date as Date).getTime(),
+      },
     }
   }
 }
 
 // noinspection JSUnusedGlobalSymbols
-export default function Slug({ mdx, frontMatter }: Props): JSX.Element {
+export default function Slug({ mdx, post }: Props): JSX.Element {
   const content = hydrate(mdx, { components })
 
   return (

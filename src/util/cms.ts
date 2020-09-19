@@ -11,7 +11,7 @@ const root = process.cwd()
 export const mdNames = (): Promise<string[]> =>
   readdir(path.join(root, "content"))
 
-type MD = {
+export type MD = {
   data: Record<string, unknown>
   content: string
 }

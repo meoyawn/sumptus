@@ -24,7 +24,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps): JSX.E
 
   return (
     <ChakraProvider resetCSS>
-      <Container>
+      <Container maxW="lg">
         <Component {...pageProps} />
       </Container>
     </ChakraProvider>
