@@ -14,7 +14,7 @@ import {
   useColorMode,
   VStack,
 } from "@chakra-ui/core";
-import ReactEcharts from 'echarts-for-react';
+import { ResponsiveLineCanvas } from "@nivo/line";
 
 const SymbolInput = ({ initial, min, symbol, onChange, max }: {
   symbol: string
@@ -75,6 +75,8 @@ export default function Bootstrap(): JSX.Element {
 
   const { colorMode } = useColorMode()
 
+  const ys = series(savings, expenses, income, growth, months)
+
   return (
     <Stack
       direction={{
@@ -115,41 +117,19 @@ export default function Bootstrap(): JSX.Element {
         </FormControl>
       </VStack>
 
-      <Box flex={1}>
-        <ReactEcharts
-          style={{
-            height: '400px',
-            width: '100%'
-          }}
-          theme={colorMode}
-          option={{
-            xAxis: {
-              data: months ? Array.from(Array(months).keys()) : [],
-            },
-            yAxis: {
-              axisLabel: {
-                formatter(value: number) {
-                  if (value > 1_000_000_000) {
-                    return Math.floor(value / 1_000_000_000) + "B"
-                  }
-                  if (value > 1_000_000) {
-                    return Math.floor(value / 1_000_000) + "M"
-                  }
-                  if (value > 10_000) {
-                    return Math.floor(value / 1_000) + "K"
-                  }
-                  return value
+      <Box flex={1} h={400}>
+        <ResponsiveLineCanvas
+          data={[
+            {
+              id: 'id',
+              data: Array.from(Array(months).keys()).map((x, i) => (
+                {
+                  x,
+                  y: ys[i],
                 }
-              }
-            },
-            series: [
-              {
-                data: series(savings, expenses, income, growth, Math.min(120, months)),
-                type: 'line',
-                smooth: true,
-              }
-            ],
-          }}
+              )),
+            }
+          ]}
         />
       </Box>
     </Stack>
