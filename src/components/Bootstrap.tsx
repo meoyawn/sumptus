@@ -130,6 +130,8 @@ export default function Bootstrap(): JSX.Element {
               )),
             }
           ]}
+          axisLeft={{}}
+          yFormat=".2s"
         />
       </Box>
     </Stack>
