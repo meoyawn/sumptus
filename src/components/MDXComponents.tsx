@@ -15,6 +15,8 @@ import {
   UnorderedList
 } from "@chakra-ui/core"
 
+import Bootstrap from "./Bootstrap";
+
 export default {
   a: Link,
   blockquote: Alert,
@@ -34,4 +36,6 @@ export default {
   p: (props: unknown) => <Text as="p" {...props} />,
   strong: (props: unknown) => <Box as="strong" fontWeight="semibold" {...props} />,
   ul: UnorderedList,
+
+  Bootstrap: Bootstrap,
 }
