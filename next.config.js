@@ -5,7 +5,7 @@ const optimizedImages = require('next-optimized-images');
 
 const building = ["build", "dev"]
 
-const adapter = building.some(x => process.env.npm_config_argv?.includes(x))
+const adapter = building.some(x => process.env.npm_config_argv.includes(x))
   ? require("responsive-loader/sharp")
   : undefined
 

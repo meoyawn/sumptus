@@ -1,9 +1,5 @@
 import React from "react";
 import Document, { Head, Html, Main, NextScript } from 'next/document'
-import { captureException } from "@sentry/minimal";
-
-process.on('unhandledRejection', err => captureException(err))
-process.on('uncaughtException', err => captureException(err))
 
 const icon16 = require('../images/icon.png?size=16')
 const icon32 = require('../images/icon.png?size=32')

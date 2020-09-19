@@ -1,13 +1,7 @@
 import React, { useEffect } from "react"
 import { AppProps } from 'next/app'
-import { init as sentryInit } from "@sentry/browser"
 import { initialize as analyticsInit, pageview } from 'react-ga'
 import { ChakraProvider, Container } from "@chakra-ui/core"
-
-sentryInit({
-  enabled: !!process.env.NEXT_PUBLIC_SENTRY,
-  dsn: process.env.NEXT_PUBLIC_SENTRY,
-});
 
 // noinspection JSUnusedGlobalSymbols
 export default function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
