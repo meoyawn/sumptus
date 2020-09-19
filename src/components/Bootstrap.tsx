@@ -80,7 +80,7 @@ export default function Bootstrap(): JSX.Element {
   return (
     <Stack
       direction={{
-        sm: "column",
+        base: "column",
         md: "row",
       }}
     >
@@ -117,7 +117,7 @@ export default function Bootstrap(): JSX.Element {
         </FormControl>
       </VStack>
 
-      <Box flex={1} h={400}>
+      <Box flex={1} height={400}>
         <ResponsiveLineCanvas
           data={[
             {
@@ -130,8 +130,28 @@ export default function Bootstrap(): JSX.Element {
               )),
             }
           ]}
-          axisLeft={{}}
+          xScale={{
+            type: "linear",
+          }}
+          axisLeft={{
+            format: ".2s",
+            legend: "Savings",
+            legendPosition: "middle",
+            legendOffset: -45,
+          }}
+          axisBottom={{
+            tickValues: 10,
+            legend: "Months",
+            legendPosition: "middle",
+            legendOffset: 30,
+          }}
+          margin={{
+            left: 50,
+            bottom: 50,
+            right: 50,
+          }}
           yFormat=".2s"
+          curve="monotoneX"
         />
       </Box>
     </Stack>
