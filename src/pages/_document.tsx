@@ -1,5 +1,6 @@
 import React from "react";
 import Document, { Head, Html, Main, NextScript } from 'next/document'
+import { ColorModeScript } from "@chakra-ui/core";
 
 const icon16 = require('../images/icon.png?size=16')
 const icon32 = require('../images/icon.png?size=32')
@@ -23,6 +24,7 @@ export default class MyDocument extends Document {
         </Head>
 
         <body>
+          <ColorModeScript />
           <Main />
           <NextScript />
         </body>

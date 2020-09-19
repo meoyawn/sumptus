@@ -6,7 +6,7 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputLeftAddon,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -23,42 +23,39 @@ const SymbolInput = ({ initial, min, symbol, onChange, max }: {
   min?: number
   onChange?: (x: number) => void
   max?: number
-}): JSX.Element => {
-  return (
-    <InputGroup>
+}): JSX.Element => (
+  <InputGroup>
+    <InputLeftAddon pointerEvents="none">{symbol}</InputLeftAddon>
 
-      <InputLeftElement pointerEvents="none">{symbol}</InputLeftElement>
-
-      <Input
-        // onChange={({ target }) => {
-        //   const v = target.value
-        //   if (onChange) {
-        //     onChange(parseFloat(v))
-        //   }
-        // }}
-        // value={initial}
-        type={"number"}
-        min={min}
-        max={max}
-      />
-    </InputGroup>
-  )
-}
+    <Input
+      onChange={({ target: { value } }) => {
+        if (onChange) {
+          onChange(parseFloat(value))
+        }
+      }}
+      defaultValue={initial}
+      type="number"
+      min={min}
+      max={max}
+    />
+  </InputGroup>
+)
 
 const series = (savings: number, expenses: number, income: number, growth: number, months: number): number[] => {
   if (!months) return []
 
   const ret = Array(months)
+
   let balance = savings
   let currentIncome = income
 
   ret[0] = savings
-
   for (let i = 1; i < months; i++) {
     currentIncome = Math.max(currentIncome + currentIncome * growth / 100)
     balance += currentIncome - expenses
     ret[i] = balance
   }
+
   return ret
 }
 
@@ -150,6 +147,7 @@ export default function Bootstrap(): JSX.Element {
           }}
           yFormat=".2s"
           curve="monotoneX"
+          colors={{ scheme: colorMode === 'light' ? "category10" : 'dark2' }}
         />
       </Box>
     </Stack>
