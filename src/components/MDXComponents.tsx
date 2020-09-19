@@ -20,7 +20,7 @@ import Bootstrap from "./Bootstrap";
 export default {
   a: Link,
   blockquote: Alert,
-  br: Box,
+  br: (props: unknown) => <Box as="br" height={24} {...props} />,
   code: Code,
   h1: (props: unknown) => <Heading as='h1' size='2xl' {...props} />,
   h2: (props: unknown) => <Heading as='h2' size='xl' {...props} />,

@@ -4,8 +4,9 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
-  NumberInput,
-  NumberInputField,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -23,29 +24,24 @@ const SymbolInput = ({ initial, min, symbol, onChange, max }: {
   onChange?: (x: number) => void
   max?: number
 }): JSX.Element => {
-  const [value, setValue] = React.useState(initial?.toString() ?? "")
-
-  const format = (val: string): string =>
-    symbol + val
-
-  const parse = (val: string): string =>
-    val.replace(symbol, "")
-
   return (
-    <NumberInput
-      onChange={(valueString) => {
-        const v = parse(valueString);
-        setValue(v)
-        if (onChange) {
-          onChange(parseFloat(v))
-        }
-      }}
-      value={format(value)}
-      min={min}
-      max={max}
-    >
-      <NumberInputField />
-    </NumberInput>
+    <InputGroup>
+
+      <InputLeftElement pointerEvents="none">{symbol}</InputLeftElement>
+
+      <Input
+        // onChange={({ target }) => {
+        //   const v = target.value
+        //   if (onChange) {
+        //     onChange(parseFloat(v))
+        //   }
+        // }}
+        // value={initial}
+        type={"number"}
+        min={min}
+        max={max}
+      />
+    </InputGroup>
   )
 }
 
@@ -84,38 +80,40 @@ export default function Bootstrap(): JSX.Element {
         md: "row",
       }}
     >
-      <VStack>
-        <FormControl id="savings">
-          <FormLabel>Liquid Savings</FormLabel>
-          <SymbolInput symbol={"$"} initial={savings} onChange={setSavings} />
-        </FormControl>
+      <form>
+        <VStack>
+          <FormControl id="savings">
+            <FormLabel>Liquid Savings</FormLabel>
+            <SymbolInput symbol={"$"} initial={savings} onChange={setSavings} />
+          </FormControl>
 
-        <FormControl id="expenses">
-          <FormLabel>Monthly Expenses</FormLabel>
-          <SymbolInput symbol={"$"} min={0} initial={expenses} onChange={setExpenses} />
-        </FormControl>
+          <FormControl id="expenses">
+            <FormLabel>Monthly Expenses</FormLabel>
+            <SymbolInput symbol={"$"} min={0} initial={expenses} onChange={setExpenses} />
+          </FormControl>
 
-        <FormControl id="income">
-          <FormLabel>Current Monthly Income</FormLabel>
-          <SymbolInput symbol={"$"} min={0} initial={income} onChange={setIncome} />
-        </FormControl>
+          <FormControl id="income">
+            <FormLabel>Current Monthly Income</FormLabel>
+            <SymbolInput symbol={"$"} min={0} initial={income} onChange={setIncome} />
+          </FormControl>
 
-        <FormControl id="growth">
-          <FormLabel>Monthly Income Growth</FormLabel>
-          <SymbolInput symbol={"%"} initial={growth} onChange={setGrowth} />
-        </FormControl>
+          <FormControl id="growth">
+            <FormLabel>Monthly Income Growth</FormLabel>
+            <SymbolInput symbol={"%"} initial={growth} onChange={setGrowth} />
+          </FormControl>
 
-        <FormControl id="months">
-          <Slider defaultValue={months} onChange={setMonths} min={2} max={120}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
+          <FormControl id="months">
+            <Slider defaultValue={months} onChange={setMonths} min={2} max={120}>
+              <SliderTrack>
+                <SliderFilledTrack />
+              </SliderTrack>
+              <SliderThumb />
+            </Slider>
 
-          <FormHelperText>{months} months</FormHelperText>
-        </FormControl>
-      </VStack>
+            <FormHelperText>{months} months</FormHelperText>
+          </FormControl>
+        </VStack>
+      </form>
 
       <Box flex={1} height={400}>
         <ResponsiveLineCanvas
@@ -137,7 +135,7 @@ export default function Bootstrap(): JSX.Element {
             format: ".2s",
             legend: "Savings",
             legendPosition: "middle",
-            legendOffset: -45,
+            legendOffset: -50,
           }}
           axisBottom={{
             tickValues: 10,
@@ -146,7 +144,7 @@ export default function Bootstrap(): JSX.Element {
             legendOffset: 30,
           }}
           margin={{
-            left: 50,
+            left: 55,
             bottom: 50,
             right: 50,
           }}
