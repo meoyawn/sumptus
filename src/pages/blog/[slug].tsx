@@ -1,12 +1,12 @@
 // server
 import renderToString from 'next-mdx-remote/render-to-string'
-
 import { mdNames, readMD } from "../../util/cms";
 
 // client
 import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import hydrate from 'next-mdx-remote/hydrate'
+import { Heading, Stack } from '@chakra-ui/core';
 
 import MDXComponents from "../../components/MDXComponents"
 import { Post } from "./index";
@@ -54,8 +54,9 @@ export default function Slug({ mdx, post }: Props): JSX.Element {
   const content = hydrate(mdx, { components })
 
   return (
-    <>
+    <Stack>
+      <Heading as={"h1"} size={"2xl"}>{post.title}</Heading>
       {content}
-    </>
+    </Stack>
   )
 }

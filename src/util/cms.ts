@@ -6,10 +6,8 @@ import grayMatter from 'gray-matter'
 const readdir = util.promisify(fs.readdir)
 const readFile = util.promisify(fs.readFile)
 
-const root = process.cwd()
-
 export const mdNames = (): Promise<string[]> =>
-  readdir(path.join(root, "content"))
+  readdir(path.join(process.cwd(), "content"))
 
 export type MD = {
   data: Record<string, unknown>
@@ -17,4 +15,4 @@ export type MD = {
 }
 
 export const readMD = async (name: string): Promise<MD> =>
-  grayMatter(await readFile(path.join(root, "content", name)))
+  grayMatter(await readFile(path.join(process.cwd(), "content", name)))

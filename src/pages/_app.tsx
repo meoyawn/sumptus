@@ -1,12 +1,19 @@
 import React, { useEffect } from "react"
 import { AppProps } from 'next/app'
 import { initialize as analyticsInit, pageview } from 'react-ga'
-import { ChakraProvider, Container } from "@chakra-ui/core"
+
+import { ChakraProvider, Container, theme } from "@chakra-ui/core"
+import { merge } from "@chakra-ui/utils"
+
+const customTheme = merge(theme, {
+  // Extend the theme to include custom colors, fonts, etc.
+})
+
+const googleAnalytics = process.env.NEXT_PUBLIC_GA
 
 // noinspection JSUnusedGlobalSymbols
 export default function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
 
-  const googleAnalytics = process.env.NEXT_PUBLIC_GA
   if (googleAnalytics) {
     useEffect(() => {
       analyticsInit(googleAnalytics)
@@ -17,7 +24,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps): JSX.E
   }
 
   return (
-    <ChakraProvider resetCSS>
+    <ChakraProvider resetCSS theme={customTheme}>
       <Container maxW="md">
         <Component {...pageProps} />
       </Container>
