@@ -17,6 +17,14 @@ import {
 } from "@chakra-ui/core";
 import { ResponsiveLineCanvas } from "@nivo/line";
 
+import { Line } from '@vx/shape';
+import { AxisLeft, AxisBottom } from '@vx/axis';
+import {curveNatural} from "@vx/curve";
+import { LinePath } from '@vx/shape';
+import { ParentSize } from '@vx/responsive';
+import { scaleTime, scaleLinear } from '@vx/scale';
+import { extent, max } from 'd3-array';
+
 const SymbolInput = ({ initial, min, symbol, onChange, max }: {
   symbol: string
   initial?: number
@@ -59,6 +67,18 @@ const series = (savings: number, expenses: number, income: number, growth: numbe
   return ret
 }
 
+const TheChart = (): JSX.Element => (
+  <ParentSize>
+    {({width,height}) => (
+    <svg width={width} height={height} >
+      <LinePath
+        curve={curveNatural}
+      />
+    </svg>
+  )  }
+  </ParentSize>
+)
+
 export default function Bootstrap(): JSX.Element {
   const [savings, setSavings] = useState(32000)
   const [expenses, setExpenses] = useState(330)
@@ -77,40 +97,38 @@ export default function Bootstrap(): JSX.Element {
         md: "row",
       }}
     >
-      <form>
-        <VStack>
-          <FormControl id="savings">
-            <FormLabel>Liquid Savings</FormLabel>
-            <SymbolInput symbol={"$"} initial={savings} onChange={setSavings} />
-          </FormControl>
+      <VStack>
+        <FormControl id="savings">
+          <FormLabel>Liquid Savings</FormLabel>
+          <SymbolInput symbol={"$"} initial={savings} onChange={setSavings} />
+        </FormControl>
 
-          <FormControl id="expenses">
-            <FormLabel>Monthly Expenses</FormLabel>
-            <SymbolInput symbol={"$"} min={0} initial={expenses} onChange={setExpenses} />
-          </FormControl>
+        <FormControl id="expenses">
+          <FormLabel>Monthly Expenses</FormLabel>
+          <SymbolInput symbol={"$"} min={0} initial={expenses} onChange={setExpenses} />
+        </FormControl>
 
-          <FormControl id="income">
-            <FormLabel>Current Monthly Income</FormLabel>
-            <SymbolInput symbol={"$"} min={0} initial={income} onChange={setIncome} />
-          </FormControl>
+        <FormControl id="income">
+          <FormLabel>Current Monthly Income</FormLabel>
+          <SymbolInput symbol={"$"} min={0} initial={income} onChange={setIncome} />
+        </FormControl>
 
-          <FormControl id="growth">
-            <FormLabel>Monthly Income Growth</FormLabel>
-            <SymbolInput symbol={"%"} initial={growth} onChange={setGrowth} />
-          </FormControl>
+        <FormControl id="growth">
+          <FormLabel>Monthly Income Growth</FormLabel>
+          <SymbolInput symbol={"%"} initial={growth} onChange={setGrowth} />
+        </FormControl>
 
-          <FormControl id="months">
-            <Slider defaultValue={months} onChange={setMonths} min={2} max={120}>
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
+        <FormControl id="months">
+          <Slider defaultValue={months} onChange={setMonths} min={2} max={120}>
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
 
-            <FormHelperText>{months} months</FormHelperText>
-          </FormControl>
-        </VStack>
-      </form>
+          <FormHelperText>{months} months</FormHelperText>
+        </FormControl>
+      </VStack>
 
       <Box flex={1} height={400}>
         <ResponsiveLineCanvas

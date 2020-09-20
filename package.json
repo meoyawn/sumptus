@@ -1,7 +1,15 @@
 {
   "dependencies": {
     "@chakra-ui/core": "^1.0.0-rc.3",
-    "@nivo/line": "^0.62.0",
+    "@vx/axis": "^0.0.199",
+    "@vx/curve": "^0.0.199",
+    "@vx/grid": "^0.0.199",
+    "@vx/marker": "^0.0.199",
+    "@vx/responsive": "^0.0.199",
+    "@vx/scale": "^0.0.199",
+    "@vx/shape": "^0.0.199",
+    "@vx/tooltip": "^0.0.199",
+    "d3-array": "^2.7.1",
     "date-fns": "^2.16.1",
     "gray-matter": "^4.0.2",
     "next": "^9.5.1",
