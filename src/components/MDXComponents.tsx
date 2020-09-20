@@ -20,9 +20,13 @@ import Bootstrap from "./Bootstrap";
 export default {
   a: Link,
   blockquote: Alert,
-  br: (props: unknown) => <Box as="br" height={24} {...props} />,
+  br(props: unknown): JSX.Element {
+    return <Box as="br" height={24} {...props} />;
+  },
   code: Code,
-  h1: (props: unknown) => <Heading as='h1' size='2xl' {...props} />,
+  h1(props: unknown): JSX.Element {
+    return <Heading as='h1' size='2xl' {...props} />
+  },
   h2: (props: unknown) => <Heading as='h2' size='xl' {...props} />,
   h3: (props: unknown) => <Heading as='h3' size='lg' {...props} />,
   h4: (props: unknown) => <Heading as='h4' size='md' {...props} />,
