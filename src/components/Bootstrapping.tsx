@@ -34,6 +34,7 @@ const SymbolInput = ({ initial, min, symbol, onChange, max }: {
         }}
         defaultValue={initial}
         type="number"
+        inputMode="decimal"
         min={min}
         max={max}
         pl={8}
@@ -82,7 +83,7 @@ const series = (
   return ret
 }
 
-export default function Bootstrap(): JSX.Element {
+export default function Bootstrapping(): JSX.Element {
   const [savings, setSavings] = useState(34000)
   const [expenses, setExpenses] = useState(330)
   const [income, setIncome] = useState(371)
