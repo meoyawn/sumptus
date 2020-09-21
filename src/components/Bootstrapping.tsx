@@ -87,7 +87,7 @@ export default function Bootstrapping(): JSX.Element {
   const [savings, setSavings] = useState(34000)
   const [expenses, setExpenses] = useState(330)
   const [income, setIncome] = useState(371)
-  const [compoundGrowth, setCompountGrowth] = useState(15)
+  const [compoundGrowth, setCompountGrowth] = useState(7)
   const [months, setMonths] = useState(24)
   const [fixedGrowth, setFixedGrowth] = useState(50)
   const [compound, setCompound] = useState(false)
@@ -194,7 +194,6 @@ export default function Bootstrapping(): JSX.Element {
             legendOffset: -50,
           }}
           axisBottom={{
-            tickValues: 10,
             legend: "Months",
             legendPosition: "middle",
             legendOffset: 32,
