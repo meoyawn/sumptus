@@ -3,12 +3,10 @@
 
 declare module 'next-mdx-remote/render-to-string' {
 
-  import React from "react";
-
   export default function renderToString(
     source: string,
     opts: {
-      components: Record<string, React.FunctionComponent>
+      components: Record<string, unknown>
       mdxOptions?: Record<string, unknown>
       scope?: Record<string, unknown>
     }
@@ -21,6 +19,6 @@ declare module 'next-mdx-remote/hydrate' {
 
   export default function hydrate(
     source: string,
-    opts: { components: Record<string, React.FunctionComponent> }
+    opts: { components: Record<string, unknown> }
   ): React.ReactNode
 }
