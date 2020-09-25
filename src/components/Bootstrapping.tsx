@@ -39,8 +39,9 @@ const SymbolInput = ({ initial, min, symbol, onChange, max }: {
         max={max}
         pl={8}
       />
+
       <Text
-        color="gray.600"
+        color="gray.500"
         pos="absolute"
         top={2}
         left={3}

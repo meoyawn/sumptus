@@ -12,15 +12,29 @@ import {
   OrderedList,
   Text,
   UnorderedList,
-  chakra,
 } from "@chakra-ui/core"
 import TweetEmbed from 'react-tweet-embed'
 
 import Bootstrapping from "./Bootstrapping";
 
 export default {
-  a: Link,
-  blockquote: Alert,
+  a(props: unknown): JSX.Element {
+    return (
+      <Link
+        color="blue.400"
+        _hover={{ color: "blue.600" }}
+        textDecoration="underline"
+
+        target="_blank"
+        rel="noreferrer"
+
+        {...props}
+      />
+    )
+  },
+  blockquote(props: unknown): JSX.Element {
+    return <Alert variant="left-accent" maxWidth="2xl" {...props} />
+  },
   br(props: unknown): JSX.Element {
     return <Box as="br" height={24} {...props} />;
   },
@@ -49,10 +63,10 @@ export default {
   li: ListItem,
   ol: OrderedList,
   p(props: unknown): JSX.Element {
-    return <Text as="p" {...props} />
+    return <Text maxWidth="2xl" as="p" fontSize="lg" my={2} {...props} />
   },
-  strong(props: unknown): JSX.Element {
-    return <chakra.span as="strong" {...props} />
+  strong(props: Record<string, unknown>): JSX.Element {
+    return <strong {...props} />
   },
   ul: UnorderedList,
 

@@ -10,6 +10,7 @@ export type Post = {
   slug: string
   title: string
   date: number
+  description: string
 }
 
 type Props = {
@@ -17,11 +18,12 @@ type Props = {
 }
 
 export const mkPost = (name: string) =>
-  ({ data: { title, date } }: MD): Post => (
+  ({ data: { title, date, description } }: MD): Post => (
     {
       slug: name.replace(".mdx", ""),
       title: title as string,
       date: (date as Date).getTime(),
+      description: description as string,
     }
   )
 
@@ -33,7 +35,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
 const blue = "blue.500"
 
-export const PostLink = ({ slug, title, date }: Post) => (
+export const PostLink = ({ slug, title, date }: Post): JSX.Element => (
   <Wrap align="center">
     <InternalLink href="/blog/[slug]" as={`/blog/${slug}`} color={blue}>
       <Text fontSize="2xl" fontWeight="bold" color={blue}>
