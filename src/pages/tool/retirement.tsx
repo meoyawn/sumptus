@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import {
   Box,
   FormControl,
@@ -14,46 +14,14 @@ import {
   Switch,
   Text,
   useColorMode,
-  VStack,
-} from "@chakra-ui/core"
-import { ResponsiveLineCanvas } from "@nivo/line"
+  VStack
+} from "@chakra-ui/core";
+import { ResponsiveLineCanvas } from "@nivo/line";
 
-import SEO from "../../components/SEO"
 import { SymbolInput } from "../../components/ToolComponents";
+import SEO from "../../components/SEO";
 
-type Point = { x: number, y: number }
-
-const series = (
-  savings: number,
-  expenses: number,
-  income: number,
-  increment: (current: number) => number,
-  months: number,
-): Point[] => {
-  if (!months) return []
-
-  const ret = Array<Point>(months)
-
-  let balance = savings
-  let currentIncome = income
-
-  ret[0] = {
-    x: 0,
-    y: savings,
-  }
-  for (let i = 1; i < months; i++) {
-    currentIncome = Math.max(0, currentIncome + increment(currentIncome))
-    balance += currentIncome - expenses
-    ret[i] = {
-      x: i,
-      y: balance,
-    }
-  }
-
-  return ret
-}
-
-const TheBootstrapping = (): JSX.Element => {
+const TheRetirement = (): JSX.Element => {
   const [savings, setSavings] = useState(34000)
   const [expenses, setExpenses] = useState(330)
   const [income, setIncome] = useState(371)
@@ -61,6 +29,8 @@ const TheBootstrapping = (): JSX.Element => {
   const [months, setMonths] = useState(24)
   const [fixedGrowth, setFixedGrowth] = useState(50)
   const [compound, setCompound] = useState(false)
+
+  const [netWorth,setNetWorth]
 
   const { colorMode } = useColorMode()
 
@@ -141,14 +111,14 @@ const TheBootstrapping = (): JSX.Element => {
       <Box flex={1} height={600}>
         <ResponsiveLineCanvas
           data={[
-            {
-              id: 'Growing Income',
-              data: series(savings, expenses, income, increment, months),
-            },
-            {
-              id: 'No Income',
-              data: series(savings, expenses, 0, () => 0, months),
-            },
+            // {
+            //   id: 'Growing Income',
+            //   data: series(savings, expenses, income, increment, months),
+            // },
+            // {
+            //   id: 'No Income',
+            //   data: series(savings, expenses, 0, () => 0, months),
+            // },
           ]}
           xScale={{
             type: "linear",
@@ -195,16 +165,16 @@ const TheBootstrapping = (): JSX.Element => {
   )
 }
 
-export default function Bootstrapping(): JSX.Element {
+export default function Retirement() {
   return (
     <VStack>
-      <SEO title="Bootstrapping calculator" />
+      <SEO title="Retirement calculator" />
 
       <Heading as="h1" size="2xl">
-        Bootstrapping calculator
+        Retirement calculator
       </Heading>
 
-      <TheBootstrapping />
+      <TheRetirement />
     </VStack>
   )
 }

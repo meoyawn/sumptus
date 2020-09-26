@@ -3,6 +3,7 @@
     "@chakra-ui/core": "^1.0.0-rc.3",
     "@nivo/line": "^0.62.0",
     "date-fns": "^2.16.1",
+    "formik": "^2.1.5",
     "gray-matter": "^4.0.2",
     "next": "^9.5.1",
     "next-compose-plugins": "^2.2.0",
@@ -10,7 +11,8 @@
     "next-optimized-images": "^2.6.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-ga": "^3.1.2"
+    "react-ga": "^3.1.2",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
