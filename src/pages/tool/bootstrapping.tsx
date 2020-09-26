@@ -20,7 +20,6 @@ import {
 import { ResponsiveLineCanvas } from "@nivo/line"
 
 import SEO from "../../components/SEO"
-import { SymbolInput } from "../../components/ToolComponents";
 
 type Point = { x: number, y: number }
 

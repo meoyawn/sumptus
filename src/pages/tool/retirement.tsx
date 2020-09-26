@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -10,9 +9,7 @@ import {
   InputGroup,
   InputLeftElement,
   Stack,
-  useColorMode,
   VStack,
-  Text,
 } from "@chakra-ui/core";
 import { ResponsiveLineCanvas } from '@nivo/line'
 import { Form, Formik, useField } from "formik";
@@ -223,7 +220,7 @@ const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
       inputMode="decimal"
       required
       symbol="%"
-      helperText="Subtracted on the last year"
+      helperText="Subtracted once"
     />
   </VStack>
 )
