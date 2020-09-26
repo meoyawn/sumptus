@@ -1,171 +1,414 @@
-import React, { useState } from "react";
+import React, { ReactNode } from "react";
 import {
   Box,
   FormControl,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
-  HStack,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Stack,
-  Switch,
-  Text,
   useColorMode,
-  VStack
+  VStack,
+  Text,
 } from "@chakra-ui/core";
-import { ResponsiveLineCanvas } from "@nivo/line";
+import { ResponsiveLineCanvas } from '@nivo/line'
+import { Form, Formik, useField } from "formik";
 
-import { SymbolInput } from "../../components/ToolComponents";
 import SEO from "../../components/SEO";
 
-const TheRetirement = (): JSX.Element => {
-  const [savings, setSavings] = useState(34000)
-  const [expenses, setExpenses] = useState(330)
-  const [income, setIncome] = useState(371)
-  const [compoundGrowth, setCompountGrowth] = useState(7)
-  const [months, setMonths] = useState(24)
-  const [fixedGrowth, setFixedGrowth] = useState(50)
-  const [compound, setCompound] = useState(false)
+const TextField = ({ symbol, label, helperText, ...props }: {
+  symbol?: string
+  label: string
+  helperText?: ReactNode
 
-  const [netWorth,setNetWorth]
+  name: string
+  type: "email" | "number" | "password" | "text" | "url"
+  inputMode: "url" | "tel" | "email" | "decimal" | "numeric" | "text"
+  required: boolean
+  placeholder?: string
+  min?: number
+  max?: number
+}): JSX.Element => {
 
-  const { colorMode } = useColorMode()
-
-  const increment = (current: number) =>
-    compound
-      ? (compoundGrowth ? current * compoundGrowth / 100 : 0)
-      : (fixedGrowth ? fixedGrowth : 0)
+  const [field, { touched, error }] = useField(props)
 
   return (
-    <Stack
-      direction={{
-        base: "column",
-        md: "row",
-      }}
-      width="100%"
-    >
-      <VStack
-        spacing={4}
-        width={{
-          base: "100%",
-          md: 200,
-        }}
-        align="start"
-      >
-        <FormControl id="savings">
-          <FormLabel>Liquid Savings</FormLabel>
-          <SymbolInput symbol="$" initial={savings} onChange={setSavings} />
-          <FormHelperText>Total amount of money you can access</FormHelperText>
-        </FormControl>
+    <FormControl>
+      <FormLabel>{label}</FormLabel>
 
-        <FormControl id="expenses">
-          <FormLabel>Monthly Expenses</FormLabel>
-          <SymbolInput symbol="$" min={0} initial={expenses} onChange={setExpenses} />
-          <FormHelperText>Average monthly outflows from your bank account</FormHelperText>
-        </FormControl>
+      {symbol
+        ? (
+          <InputGroup>
+            <InputLeftElement>{symbol}</InputLeftElement>
+            <Input {...field} {...props} />
+          </InputGroup>
+        )
+        : <Input {...field} {...props} />}
 
-        <FormControl id="income">
-          <FormLabel>Current Monthly Income</FormLabel>
-          <SymbolInput symbol={"$"} min={0} initial={income} onChange={setIncome} />
-          <FormHelperText>Current average monthly income from all your activities</FormHelperText>
-        </FormControl>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
 
-        <VStack alignItems="start">
-          <Text fontWeight="medium">Monthly Income Growth</Text>
-          <HStack>
-            <Text>Fixed</Text>
-            <Switch onChange={({ target: { checked } }) => setCompound(checked)} />
-            <Text>Compound</Text>
-          </HStack>
-        </VStack>
-
-        {compound
-          ? (
-            <FormControl id="growth" key="compound">
-              <SymbolInput symbol="%" initial={compoundGrowth} onChange={setCompountGrowth} />
-              <FormHelperText>Income growth compared to previous month</FormHelperText>
-            </FormControl>
-          )
-          : (
-            <FormControl id="fixedGrowth" key="fixed">
-              <SymbolInput symbol="$" initial={fixedGrowth} onChange={setFixedGrowth} />
-              <FormHelperText>Amount of new income you expect to add each month</FormHelperText>
-            </FormControl>
-          )}
-
-        <FormControl id="months">
-          <Slider defaultValue={months} onChange={setMonths} min={2} max={120}>
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-
-          <FormHelperText>{months} months</FormHelperText>
-        </FormControl>
-      </VStack>
-
-      <Box flex={1} height={600}>
-        <ResponsiveLineCanvas
-          data={[
-            // {
-            //   id: 'Growing Income',
-            //   data: series(savings, expenses, income, increment, months),
-            // },
-            // {
-            //   id: 'No Income',
-            //   data: series(savings, expenses, 0, () => 0, months),
-            // },
-          ]}
-          xScale={{
-            type: "linear",
-          }}
-          yScale={{
-            type: "linear",
-            min: "auto",
-            max: "auto",
-          }}
-          axisLeft={{
-            format: "$.3s",
-            legend: "Savings",
-            legendPosition: "middle",
-            legendOffset: -50,
-          }}
-          axisBottom={{
-            legend: "Months",
-            legendPosition: "middle",
-            legendOffset: 32,
-          }}
-          margin={{
-            left: 55,
-            bottom: 60,
-          }}
-          yFormat="$.3s"
-          curve="monotoneX"
-          colors={{ scheme: colorMode === 'light' ? "category10" : 'dark2' }}
-          legends={[
-            {
-              anchor: "bottom",
-              direction: "row",
-              itemWidth: 100,
-              itemHeight: 0,
-              translateY: 50,
-              symbolSize: 12,
-              symbolShape: 'circle',
-            }
-          ]}
-          crosshairType={"cross"}
-          enablePoints={false}
-        />
-      </Box>
-    </Stack>
+      {touched && error && <FormErrorMessage>{error}</FormErrorMessage>}
+    </FormControl>
   )
 }
 
-export default function Retirement() {
+type FormValues = {
+  netWorth: number
+
+  monthlyExpenses: number // add fixed exchange fees here
+  monthlySavings: number
+
+  monthsOfExpensesInCash: number
+  annualInflation: number
+
+  expectedStocksReturn: number
+
+  bondsPercent: number
+  expectedBondsReturn: number
+
+  expenseRatio: number
+
+  otherAssets: number
+  otherAssetsExpectedReturn: number
+
+  longTermCapitalGainsTax: number
+}
+
+const initial = (): FormValues => (
+  {
+    netWorth: 76000,
+    monthlyExpenses: 500,
+    monthlySavings: 100,
+
+    monthsOfExpensesInCash: 12,
+    annualInflation: 3.91,
+
+    expectedStocksReturn: 10.6,
+    expenseRatio: 0.15,
+
+    bondsPercent: 0,
+    expectedBondsReturn: 6.99,
+
+    otherAssets: 43000,
+    otherAssetsExpectedReturn: 0,
+
+    longTermCapitalGainsTax: 13,
+  }
+)
+
+const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
+  <VStack
+    spacing={4}
+    width={{
+      base: "100%",
+      md: 230,
+    }}
+    align="start"
+  >
+    <TextField
+      name="netWorth"
+      label="Net Worth"
+      type="number"
+      inputMode="decimal"
+      helperText="Assets minus debt"
+      symbol="$"
+      required
+    />
+
+    <TextField
+      name="monthlyExpenses"
+      label="Monthly Expenses"
+      type="number"
+      inputMode="decimal"
+      helperText="Monthly cash outflow. Including brokerage fees and banking expenses"
+      symbol="$"
+      required
+    />
+
+    <TextField
+      name="monthlySavings"
+      label="Saving each month"
+      type="number"
+      inputMode="decimal"
+      symbol="$"
+      required
+    />
+
+    <TextField
+      name="monthsOfExpensesInCash"
+      label="Months of Expenses in Cash"
+      type="number"
+      inputMode="decimal"
+      required
+      helperText={(<>${monthlyExpenses} * {monthsOfExpensesInCash} months = ${monthlyExpenses * monthsOfExpensesInCash}</>)}
+    />
+
+    <TextField
+      name="annualInflation"
+      label="Inflation"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+      helperText="Your expenses are growing by this amount each year"
+    />
+
+    <TextField
+      name="expectedStocksReturn"
+      label="Expected Return from Stocks"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+    />
+
+    <TextField
+      name="expenseRatio"
+      label="Expense Ratio"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+      helperText="Average fee your ETFs and other funds take each year"
+      min={0}
+      max={100}
+    />
+
+    <TextField
+      name="bondsPercent"
+      label="Bonds Allocation"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+      helperText="Portfolio percentage in bonds"
+    />
+
+    <TextField
+      name="expectedBondsReturn"
+      label="Expected Return from Bonds"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+    />
+
+    <TextField
+      name="otherAssets"
+      label="Other Assets"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="$"
+      helperText="Other assets like real estate"
+    />
+
+    <TextField
+      name="otherAssetsExpectedReturn"
+      label="Expected Return from Other Assets"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+      helperText="Rent and price gain/loss (annual)"
+    />
+
+    <TextField
+      name="longTermCapitalGainsTax"
+      label="Long Term Capital Gains Tax"
+      type="number"
+      inputMode="decimal"
+      required
+      symbol="%"
+      helperText="Subtracted on the last year"
+    />
+  </VStack>
+)
+
+type Point = { x: number, y: number }
+
+type Return = {
+  stocks: Point[]
+  bonds: Point[]
+  cash: Point[]
+  other: Point[]
+}
+
+const percent = (value: number, perc: number): number =>
+  value / 100 * perc
+
+const calculate = ({
+  netWorth,
+  otherAssets,
+  bondsPercent,
+  expectedBondsReturn,
+  expectedStocksReturn,
+  monthlyExpenses,
+  monthsOfExpensesInCash,
+  annualInflation,
+  expenseRatio,
+  otherAssetsExpectedReturn,
+  monthlySavings,
+  longTermCapitalGainsTax,
+}: FormValues): Return => {
+  const stocks: Point[] = []
+  const bonds: Point[] = []
+  const other: Point[] = []
+  const cash: Point[] = []
+
+  let x = 0
+
+  let currentBonds = percent(netWorth, bondsPercent)
+  bonds.push({ x, y: currentBonds })
+
+  let currentMonthlyExpenses = monthlyExpenses
+
+  let currentCash = currentMonthlyExpenses * monthsOfExpensesInCash
+  cash.push({ x, y: currentCash })
+
+  let currentStocks = netWorth - currentBonds - currentCash - otherAssets
+  if (currentStocks < 0) {
+    return { stocks, bonds, other, cash, }
+  }
+  stocks.push({ x, y: currentStocks })
+
+  other.push({ x, y: otherAssets })
+
+  let taxes = 0
+
+  do {
+    x++
+
+    currentMonthlyExpenses += percent(currentMonthlyExpenses, annualInflation)
+
+    const previousCash = currentCash
+    currentCash = currentMonthlyExpenses * monthsOfExpensesInCash;
+    const extraCash = monthlySavings * 12 + percent(otherAssets, otherAssetsExpectedReturn) + previousCash - currentCash
+    cash.push({ x, y: currentCash })
+
+    currentStocks += percent(currentStocks, expectedStocksReturn)
+    currentStocks -= percent(currentStocks, expenseRatio)
+    currentStocks += extraCash
+    stocks.push({ x, y: currentStocks })
+
+    // TODO rebalance bonds
+    currentBonds += percent(currentBonds, expectedBondsReturn)
+    bonds.push({ x, y: currentBonds })
+
+    taxes = percent(currentStocks - stocks[0].y, longTermCapitalGainsTax) + percent(currentBonds - bonds[0].y, longTermCapitalGainsTax)
+
+    other.push({ x, y: otherAssets })
+  } while (currentCash + currentStocks + currentBonds + otherAssets - taxes < currentMonthlyExpenses * 12 * 25)
+
+  return { stocks, bonds, other, cash }
+}
+
+const toData = ({ stocks, bonds, other, cash }: Return) => (
+  [
+    {
+      id: "Bonds",
+      data: bonds,
+    },
+    {
+      id: "Cash",
+      data: cash,
+    },
+    {
+      id: "Other",
+      data: other
+    },
+    {
+      id: "Stocks",
+      data: stocks
+    },
+  ]
+)
+
+const Calculations = (values: FormValues) => {
+  const calc = calculate(values)
+
+  return (
+    <VStack flex={1} height={700}>
+      <Heading as="h2" size="md">It will take you {calc.stocks.length} years to FI/RE</Heading>
+      <ResponsiveLineCanvas
+        data={toData(calc)}
+        xScale={{
+          type: "linear",
+        }}
+        enableArea={true}
+        yScale={{
+          type: "linear",
+          min: "auto",
+          max: "auto",
+          stacked: true,
+        }}
+        axisLeft={{
+          format: "$.3s",
+          legend: "Savings",
+          legendPosition: "middle",
+          legendOffset: -50,
+        }}
+        axisBottom={{
+          legend: "Years",
+          legendPosition: "middle",
+          legendOffset: 32,
+        }}
+        margin={{
+          left: 55,
+          bottom: 60,
+        }}
+        yFormat="$.3s"
+        curve="monotoneX"
+        colors={{ scheme: 'category10' }}
+        legends={[
+          {
+            anchor: "bottom",
+            direction: "row",
+            itemWidth: 100,
+            itemHeight: 0,
+            translateY: 50,
+            symbolSize: 12,
+            symbolShape: 'circle',
+          }
+        ]}
+        crosshairType={"cross"}
+        enablePoints={false}
+      />
+    </VStack>
+  )
+}
+
+const TheRetirement = (): JSX.Element => {
+  return (
+    <Formik<FormValues>
+      onSubmit={(values) => {
+        console.log(values)
+      }}
+      initialValues={initial()}
+    >
+      {({ values }) => (
+        <Stack
+          direction={{
+            base: "column",
+            md: "row",
+          }}
+          width="100%"
+        >
+          <Form>
+            <Fields {...values} />
+          </Form>
+
+          <Calculations {...values} />
+        </Stack>
+      )}
+    </Formik>
+  )
+}
+
+export default function Retirement(): JSX.Element {
   return (
     <VStack>
       <SEO title="Retirement calculator" />
