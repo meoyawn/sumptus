@@ -4,53 +4,22 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   HStack,
-  Input,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
   Stack,
   Switch,
+  Text,
   useColorMode,
   VStack,
-  Text,
 } from "@chakra-ui/core"
 import { ResponsiveLineCanvas } from "@nivo/line"
 
-const SymbolInput = ({ initial, min, symbol, onChange, max }: {
-  symbol: string
-  initial?: number
-  min?: number
-  onChange?: (x: number) => void
-  max?: number
-}): JSX.Element => (
-    <Box pos="relative">
-      <Input
-        onChange={({ target: { value } }) => {
-          if (onChange) {
-            onChange(parseFloat(value) || 0)
-          }
-        }}
-        defaultValue={initial}
-        type="number"
-        inputMode="decimal"
-        min={min}
-        max={max}
-        pl={8}
-      />
-
-      <Text
-        color="gray.500"
-        pos="absolute"
-        top={2}
-        left={3}
-        zIndex={1}
-      >
-        {symbol}
-      </Text>
-    </Box>
-  )
+import SEO from "../../components/SEO"
+import { SymbolInput } from "../../components/ToolComponents";
 
 type Point = { x: number, y: number }
 
@@ -84,7 +53,7 @@ const series = (
   return ret
 }
 
-export default function Bootstrapping(): JSX.Element {
+function TheBootstrapping(): JSX.Element {
   const [savings, setSavings] = useState(34000)
   const [expenses, setExpenses] = useState(330)
   const [income, setIncome] = useState(371)
@@ -106,6 +75,7 @@ export default function Bootstrapping(): JSX.Element {
         base: "column",
         md: "row",
       }}
+      width="100%"
     >
       <VStack
         spacing={4}
@@ -123,7 +93,7 @@ export default function Bootstrapping(): JSX.Element {
 
         <FormControl id="expenses">
           <FormLabel>Monthly Expenses</FormLabel>
-          <SymbolInput symbol={"$"} min={0} initial={expenses} onChange={setExpenses} />
+          <SymbolInput symbol="$" min={0} initial={expenses} onChange={setExpenses} />
           <FormHelperText>Average monthly outflows from your bank account</FormHelperText>
         </FormControl>
 
@@ -222,5 +192,19 @@ export default function Bootstrapping(): JSX.Element {
         />
       </Box>
     </Stack>
+  )
+}
+
+export default function Bootstrapping(): JSX.Element {
+  return (
+    <VStack>
+      <SEO title="Bootstrapping calculator" />
+
+      <Heading as="h1" size="2xl">
+        Bootstrapping calculator
+      </Heading>
+
+      <TheBootstrapping />
+    </VStack>
   )
 }

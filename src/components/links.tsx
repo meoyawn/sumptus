@@ -15,17 +15,17 @@ export const InternalLink = ({
   children,
   ...chakraProps
 }: NextChakraLinkProps): JSX.Element => (
-  <NextLink
-    passHref={true}
-    href={href}
-    as={as}
-    replace={replace}
-    scroll={scroll}
-    shallow={shallow}
-    prefetch={prefetch}
-  >
-    <ChakraLink {...chakraProps}>
-      {children}
-    </ChakraLink>
-  </NextLink>
-)
+    <NextLink
+      passHref={true}
+      href={href}
+      as={as}
+      replace={replace}
+      scroll={scroll}
+      shallow={shallow}
+      prefetch={prefetch}
+    >
+      <ChakraLink {...chakraProps}>
+        {children}
+      </ChakraLink>
+    </NextLink>
+  )

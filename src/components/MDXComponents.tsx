@@ -13,9 +13,6 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/core"
-import TweetEmbed from 'react-tweet-embed'
-
-import Bootstrapping from "./Bootstrapping";
 
 export default {
   a(props: unknown): JSX.Element {
@@ -43,7 +40,7 @@ export default {
     return <Heading as='h1' size='2xl' {...props} />
   },
   h2(props: unknown): JSX.Element {
-    return <Heading as='h2' size='xl' {...props} />
+    return <Heading as='h2' size='xl' pt={8} {...props} />
   },
   h3(props: unknown): JSX.Element {
     return <Heading as='h3' size='lg' {...props} />
@@ -63,13 +60,10 @@ export default {
   li: ListItem,
   ol: OrderedList,
   p(props: unknown): JSX.Element {
-    return <Text maxWidth="2xl" as="p" fontSize="lg" my={2} {...props} />
+    return <Text maxWidth="2xl" as="p" fontSize="xl" my={2} {...props} />
   },
   strong(props: Record<string, unknown>): JSX.Element {
     return <strong {...props} />
   },
   ul: UnorderedList,
-
-  Bootstrapping: Bootstrapping,
-  TweetEmbed: TweetEmbed,
 }

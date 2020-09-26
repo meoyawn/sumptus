@@ -10,6 +10,7 @@ import { Heading, Stack } from '@chakra-ui/core';
 
 import MDXComponents from "../../components/MDXComponents"
 import { Post } from "./index";
+import SEO from '../../components/SEO';
 
 const components = MDXComponents
 
@@ -44,6 +45,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
         slug: params.slug,
         title: data.title as string,
         date: (data.date as Date).getTime(),
+        description: data.description as string,
       },
     }
   }
@@ -55,7 +57,13 @@ export default function Slug({ mdx, post }: Props): JSX.Element {
 
   return (
     <Stack>
+      <SEO
+        title={post.title}
+        description={post.description}
+      />
+
       <Heading as={"h1"} size={"2xl"}>{post.title}</Heading>
+
       {content}
     </Stack>
   )
