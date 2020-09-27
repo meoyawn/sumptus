@@ -10,11 +10,17 @@ import {
   InputLeftElement,
   Stack,
   VStack,
+  Text,
 } from "@chakra-ui/core";
-import { ResponsiveLine, ResponsiveLineCanvas } from '@nivo/line'
+import { ResponsiveLine } from '@nivo/line'
 import { Form, Formik, useField } from "formik";
 
 import SEO from "../../components/SEO";
+
+// TODO pre fire expenses
+// TODO post fire expenses
+// extra capital
+// bonds expense rate
 
 const TextField = ({ symbol, label, helperText, ...props }: {
   symbol?: string
@@ -26,21 +32,21 @@ const TextField = ({ symbol, label, helperText, ...props }: {
   inputMode: "url" | "tel" | "email" | "decimal" | "numeric" | "text"
   required: boolean
   placeholder?: string
-  min?: number
+  min?: string
   max?: number
 }): JSX.Element => {
 
   const [field, { touched, error }] = useField(props)
 
   return (
-    <FormControl>
+    <FormControl isRequired={props.required} >
       <FormLabel>{label}</FormLabel>
 
       {symbol
         ? (
           <InputGroup>
             <InputLeftElement>{symbol}</InputLeftElement>
-            <Input {...field} {...props} />
+            <Input {...field} {...props} min={props.min} />
           </InputGroup>
         )
         : <Input {...field} {...props} />}
@@ -160,6 +166,7 @@ const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
       inputMode="decimal"
       required
       symbol="%"
+      min="0"
     />
 
     <TextField
@@ -170,7 +177,7 @@ const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
       required
       symbol="%"
       helperText="Average fee your ETFs and other funds take each year"
-      min={0}
+      min="0"
       max={100}
     />
 
@@ -182,6 +189,7 @@ const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
       required
       symbol="%"
       helperText="Portfolio percentage in bonds"
+      min="0"
     />
 
     <TextField
@@ -190,6 +198,7 @@ const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
       type="number"
       inputMode="decimal"
       required
+      min="0"
       symbol="%"
     />
 
@@ -232,6 +241,7 @@ type Return = {
   bonds: Point[]
   cash: Point[]
   other: Point[]
+  capitalGains: number
 }
 
 const percent = (value: number, perc: number): number =>
@@ -256,8 +266,10 @@ const calculate = ({
   const other: Point[] = []
   const cash: Point[] = []
 
+  let capitalGains = 0
+
   if (!expectedStocksReturn || !expectedBondsReturn || !annualInflation) {
-    return { stocks, bonds, other, cash, }
+    return { stocks, bonds, other, cash, capitalGains }
   }
 
   let x = 0
@@ -272,13 +284,11 @@ const calculate = ({
 
   let currentStocks = netWorth - currentBonds - currentCash - otherAssets
   if (currentStocks < 0) {
-    return { stocks, bonds, other, cash, }
+    return { stocks, bonds, other, cash, capitalGains }
   }
   stocks.push({ x, y: currentStocks })
 
   other.push({ x, y: otherAssets })
-
-  let taxes = 0
 
   do {
     x++
@@ -290,21 +300,25 @@ const calculate = ({
     const extraCash = monthlySavings * 12 + percent(otherAssets, otherAssetsExpectedReturn) + previousCash - currentCash
     cash.push({ x, y: currentCash })
 
-    currentStocks += percent(currentStocks, expectedStocksReturn)
-    currentStocks -= percent(currentStocks, expenseRatio)
+    const bondGains = percent(currentBonds, expectedBondsReturn)
+    currentBonds += bondGains
+    capitalGains += bondGains
+    const balancedBonds = percent(currentCash + currentStocks + currentBonds + otherAssets, bondsPercent)
+    const extraBonds = currentBonds - balancedBonds
+    bonds.push({ x, y: balancedBonds })
+    currentBonds = balancedBonds
+
+    const stockGains = percent(currentStocks, expectedStocksReturn - expenseRatio)
+    currentStocks += stockGains
+    capitalGains += stockGains
     currentStocks += extraCash
+    currentStocks += extraBonds
     stocks.push({ x, y: currentStocks })
 
-    // TODO rebalance bonds
-    currentBonds += percent(currentBonds, expectedBondsReturn)
-    bonds.push({ x, y: currentBonds })
-
-    taxes = percent(currentStocks - stocks[0].y, longTermCapitalGainsTax) + percent(currentBonds - bonds[0].y, longTermCapitalGainsTax)
-
     other.push({ x, y: otherAssets })
-  } while (x < 100 && currentCash + currentStocks + currentBonds + otherAssets - taxes < currentMonthlyExpenses * 12 * 25)
+  } while (x < 100 && currentCash + currentStocks + currentBonds + otherAssets - percent(capitalGains, longTermCapitalGainsTax) < currentMonthlyExpenses * 12 * 25)
 
-  return { stocks, bonds, other, cash }
+  return { stocks, bonds, other, cash, capitalGains }
 }
 
 const toData = ({ stocks, bonds, other, cash }: Return) => (
@@ -328,14 +342,31 @@ const toData = ({ stocks, bonds, other, cash }: Return) => (
   ]
 )
 
+function last<T>(arr: T[]) {
+  return arr[arr.length - 1]
+}
+
+const endSum = ({ stocks, bonds, other, cash }: Return) =>
+  last(stocks).y + last(bonds).y + last(cash).y + last(other).y
+
+const taxes = ({ longTermCapitalGainsTax }: FormValues, { capitalGains }: Return) =>
+  percent(capitalGains, longTermCapitalGainsTax)
+
 const Calculations = (values: FormValues) => {
   const calc = calculate(values)
+  const tax = taxes(values, calc)
 
   return (
     <VStack flex={1} height={700}>
       <Heading as="h2" size="md">
         It will take you {calc.stocks.length - 1} years to FI/RE
       </Heading>
+
+      {calc.stocks.length && (
+        <Text>
+          Net worth: ${Math.round(endSum(calc) - tax)} after ${Math.round(tax)} in taxes
+        </Text>
+      )}
 
       <ResponsiveLine
         data={toData(calc)}
@@ -352,7 +383,7 @@ const Calculations = (values: FormValues) => {
         }}
         axisLeft={{
           format: "$.3s",
-          legend: "Savings",
+          legend: "Net Worth",
           legendPosition: "middle",
           legendOffset: -50,
         }}
