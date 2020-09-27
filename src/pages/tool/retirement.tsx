@@ -11,7 +11,7 @@ import {
   Stack,
   VStack,
 } from "@chakra-ui/core";
-import { ResponsiveLineCanvas } from '@nivo/line'
+import { ResponsiveLine, ResponsiveLineCanvas } from '@nivo/line'
 import { Form, Formik, useField } from "formik";
 
 import SEO from "../../components/SEO";
@@ -256,6 +256,10 @@ const calculate = ({
   const other: Point[] = []
   const cash: Point[] = []
 
+  if (!expectedStocksReturn || !expectedBondsReturn || !annualInflation) {
+    return { stocks, bonds, other, cash, }
+  }
+
   let x = 0
 
   let currentBonds = percent(netWorth, bondsPercent)
@@ -298,7 +302,7 @@ const calculate = ({
     taxes = percent(currentStocks - stocks[0].y, longTermCapitalGainsTax) + percent(currentBonds - bonds[0].y, longTermCapitalGainsTax)
 
     other.push({ x, y: otherAssets })
-  } while (currentCash + currentStocks + currentBonds + otherAssets - taxes < currentMonthlyExpenses * 12 * 25)
+  } while (x < 100 && currentCash + currentStocks + currentBonds + otherAssets - taxes < currentMonthlyExpenses * 12 * 25)
 
   return { stocks, bonds, other, cash }
 }
@@ -306,16 +310,16 @@ const calculate = ({
 const toData = ({ stocks, bonds, other, cash }: Return) => (
   [
     {
-      id: "Bonds",
-      data: bonds,
+      id: "Other",
+      data: other
     },
     {
       id: "Cash",
       data: cash,
     },
     {
-      id: "Other",
-      data: other
+      id: "Bonds",
+      data: bonds,
     },
     {
       id: "Stocks",
@@ -329,16 +333,20 @@ const Calculations = (values: FormValues) => {
 
   return (
     <VStack flex={1} height={700}>
-      <Heading as="h2" size="md">It will take you {calc.stocks.length} years to FI/RE</Heading>
-      <ResponsiveLineCanvas
+      <Heading as="h2" size="md">
+        It will take you {calc.stocks.length - 1} years to FI/RE
+      </Heading>
+
+      <ResponsiveLine
         data={toData(calc)}
         xScale={{
           type: "linear",
         }}
         enableArea={true}
+        areaBaselineValue={0}
         yScale={{
           type: "linear",
-          min: "auto",
+          // min: "auto",
           max: "auto",
           stacked: true,
         }}
@@ -359,7 +367,7 @@ const Calculations = (values: FormValues) => {
         }}
         yFormat="$.3s"
         curve="monotoneX"
-        colors={{ scheme: 'category10' }}
+        colors={{ scheme: 'set3' }}
         legends={[
           {
             anchor: "bottom",
@@ -373,6 +381,9 @@ const Calculations = (values: FormValues) => {
         ]}
         crosshairType={"cross"}
         enablePoints={false}
+        areaOpacity={0.9}
+        useMesh={true}
+        animate={false}
       />
     </VStack>
   )
