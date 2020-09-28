@@ -2,8 +2,9 @@ import React from "react"
 import { Heading, Stack } from "@chakra-ui/core";
 import { GetStaticProps } from "next";
 
-import { mkPost, Post, PostLink } from "./blog";
+import { mkPost, Post } from "./blog";
 import { mdNames, readMD } from "../util/cms";
+import { InternalLink } from "../components/links";
 
 type Props = {
   posts: readonly Post[]
@@ -24,9 +25,15 @@ export default function Index({ posts }: Props): JSX.Element {
   return (
     <Stack>
       <Heading as="h1" size='2xl'>An Experiment in Finance</Heading>
-      <Heading as="h2" size='xl'>Recent</Heading>
-
-      {posts.map(post => <PostLink key={post.slug} {...post} />)}
+      <Heading as="h2" size='xl'>Tools</Heading>
+      <InternalLink
+        href={"/tool/retirement"}
+        color={"blue.500"}
+      >Retirement Calculator</InternalLink>
+      <InternalLink
+        href={"/tool/bootstrapping"}
+        color={"blue.500"}
+      >Bootstrapping Calculator</InternalLink>
     </Stack>
   )
 }

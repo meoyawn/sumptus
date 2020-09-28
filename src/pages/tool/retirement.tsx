@@ -272,6 +272,7 @@ const calculate = ({
     return { stocks, bonds, other, cash, capitalGains }
   }
 
+  // years
   let x = 0
 
   let currentBonds = percent(netWorth, bondsPercent)
