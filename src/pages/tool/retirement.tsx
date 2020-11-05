@@ -1,62 +1,15 @@
-import React, { ReactNode } from "react";
-import {
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-  VStack,
-  Text,
-} from "@chakra-ui/core";
+import React from "react";
+import { Heading, Stack, Text, VStack, } from "@chakra-ui/core";
 import { ResponsiveLine } from '@nivo/line'
-import { Form, Formik, useField } from "formik";
+import { Form, Formik } from "formik";
 
 import SEO from "../../components/SEO";
+import { TextField } from "../../components/TextField";
 
 // TODO pre fire expenses
 // TODO post fire expenses
 // extra capital
 // bonds expense rate
-
-const TextField = ({ symbol, label, helperText, ...props }: {
-  symbol?: string
-  label: string
-  helperText?: ReactNode
-
-  name: string
-  type: "email" | "number" | "password" | "text" | "url"
-  inputMode: "url" | "tel" | "email" | "decimal" | "numeric" | "text"
-  required: boolean
-  placeholder?: string
-  min?: string
-  max?: number
-}): JSX.Element => {
-
-  const [field, { touched, error }] = useField(props)
-
-  return (
-    <FormControl isRequired={props.required} >
-      <FormLabel>{label}</FormLabel>
-
-      {symbol
-        ? (
-          <InputGroup>
-            <InputLeftElement>{symbol}</InputLeftElement>
-            <Input {...field} {...props} min={props.min} />
-          </InputGroup>
-        )
-        : <Input {...field} {...props} />}
-
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
-
-      {touched && error && <FormErrorMessage>{error}</FormErrorMessage>}
-    </FormControl>
-  )
-}
 
 type FormValues = {
   netWorth: number
@@ -146,7 +99,11 @@ const Fields = ({ monthlyExpenses, monthsOfExpensesInCash }: FormValues) => (
       type="number"
       inputMode="decimal"
       required
-      helperText={(<>${monthlyExpenses} * {monthsOfExpensesInCash} months = ${monthlyExpenses * monthsOfExpensesInCash}</>)}
+      helperText={(
+        <>
+          ${monthlyExpenses} * {monthsOfExpensesInCash} months = ${monthlyExpenses * monthsOfExpensesInCash}
+        </>
+      )}
     />
 
     <TextField

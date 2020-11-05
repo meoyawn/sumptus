@@ -34,6 +34,10 @@ export default function Index({ posts }: Props): JSX.Element {
         href={"/tool/bootstrapping"}
         color={"blue.500"}
       >Bootstrapping Calculator</InternalLink>
+      <InternalLink
+        href={"/tool/gains"}
+        color={"blue.500"}
+      >ETFs simulator</InternalLink>
     </Stack>
   )
 }

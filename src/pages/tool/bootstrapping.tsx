@@ -87,12 +87,11 @@ const SymbolInput = ({ initial, min, symbol, onChange, max }: {
     </Box>
   )
 
-
 const TheBootstrapping = (): JSX.Element => {
   const [savings, setSavings] = useState(34000)
   const [expenses, setExpenses] = useState(330)
   const [income, setIncome] = useState(371)
-  const [compoundGrowth, setCompountGrowth] = useState(7)
+  const [compoundGrowth, setCompoundGrowth] = useState(7)
   const [months, setMonths] = useState(24)
   const [fixedGrowth, setFixedGrowth] = useState(50)
   const [compound, setCompound] = useState(false)
@@ -150,7 +149,7 @@ const TheBootstrapping = (): JSX.Element => {
         {compound
           ? (
             <FormControl id="growth" key="compound">
-              <SymbolInput symbol="%" initial={compoundGrowth} onChange={setCompountGrowth} />
+              <SymbolInput symbol="%" initial={compoundGrowth} onChange={setCompoundGrowth} />
               <FormHelperText>Income growth compared to previous month</FormHelperText>
             </FormControl>
           )
