@@ -3,11 +3,8 @@ import { AppProps } from 'next/app'
 import { initialize as analyticsInit, pageview } from 'react-ga'
 
 import { ChakraProvider, Container, theme } from "@chakra-ui/core"
-import { merge } from "@chakra-ui/utils"
 
-const customTheme = merge(theme, {
-  // Extend the theme to include custom colors, fonts, etc.
-})
+const customTheme = theme
 
 const googleAnalytics = process.env.NEXT_PUBLIC_GA
 
